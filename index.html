@@ -1,107 +1,77 @@
 <!DOCTYPE html>
-<html>
+	
 <head>
-    <title>Tic Tac Toe</title>
-    <style>
-        .cell {
-            width: 100px;
-            height: 100px;
-            border: 1px solid black;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            cursor: pointer;
-        }
-    </style>
+	<meta name="viewport" content=
+		"width=device-width, initial-scale=1.0">
+	
+	<!-- CSS file Included -->
+	<link rel="stylesheet"
+		type="text/css" href="tic.css">
+	
+	<!-- JavaScript file included -->
+	<script src="tic.js"></script>
 </head>
+	
 <body>
-    <h1>Tic Tac Toe</h1>
-    <div id="board">
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-    </div>
+	<div id="main">
+		<h1>TIC TAC TOE</h1>
+	
+		<!-- Game Instructions -->
+		<p id="ins">Game starts by just Tap on
+			box<br><br>First Player starts as
+			<b>Player X</b><br>And<br>Second
+			Player as <b>Player 0</b>
+		</p>
 
-    <script>
-        // Initialize game variables
-        let board = ['', '', '', '', '', '', '', '', ''];
-        let currentPlayer = 'X';
-        let gameOver = false;
 
-        // Get all cells
-        const cells = Array.from(document.querySelectorAll('.cell'));
+	
+	
+		<br><br>
+		<!-- 3*3 grid of Boxes -->
+		<input type="text" id="b1" onclick=
+			"myfunc_3(); myfunc();" readonly>
+	
+		<input type="text" id="b2" onclick=
+			"myfunc_4(); myfunc();" readonly>
+	
+		<input type="text" id="b3" onclick=
+			"myfunc_5(); myfunc();" readonly>
+		<br><br>
+	
+		<input type="text" id="b4" onclick=
+			"myfunc_6(); myfunc();" readonly>
+				
+		<input type="text" id="b5" onclick=
+			"myfunc_7(); myfunc();" readonly>
+	
+		<input type="text" id="b6" onclick=
+			"myfunc_8(); myfunc();" readonly>
+		<br><br>
+	
+		<input type="text" id="b7" onclick=
+			"myfunc_9(); myfunc();" readonly>
+	
+		<input type="text" id="b8" onclick=
+			"myfunc_10();myfunc();" readonly>
+	
+		<input type="text" id="b9" onclick=
+			"myfunc_11();myfunc();" readonly>
+	
+		<!-- Grid end here -->
+		<br><br><br>
+		<!-- Button to reset game -->
+		<button id="but" onclick="myfunc_2()">
+			RESET
+		</button>
+	
+		<br><br>
+		<!-- Space to show player turn -->
+		<p id="print"></p>
 
-        // Add click event listener to each cell
-        cells.forEach(cell => {
-            cell.addEventListener('click', handleClick);
-        });
 
-        // Handle cell click
-        function handleClick(event) {
-            const index = cells.indexOf(event.target);
-
-            if (board[index] === '' && !gameOver) {
-                board[index] = currentPlayer;
-                event.target.textContent = currentPlayer;
-
-                if (checkWin(currentPlayer)) {
-                    alert(`${currentPlayer} wins!`);
-                    gameOver = true;
-                } else if (board.every(cell => cell !== '')) {
-                    alert("It's a draw!");
-                    gameOver = true;
-                } else {
-                    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-                    if (currentPlayer === 'O' && !gameOver) {
-                        computerPlay();
-                    }
-                }
-            }
-        }
-
-        // Generate random empty cell index
-        function getRandomEmptyCell() {
-            const emptyCells = cells.reduce((acc, cell, index) => {
-                if (board[index] === '') {
-                    acc.push(index);
-                }
-                return acc;
-            }, []);
-
-            const randomIndex = Math.floor(Math.random() * emptyCells.length);
-            return emptyCells[randomIndex];
-        }
-
-        // Let the computer make a move
-        function computerPlay() {
-            const index = getRandomEmptyCell();
-            board[index] = currentPlayer;
-            cells[index].textContent = currentPlayer;
-
-            if (checkWin(currentPlayer)) {
-                alert(`${currentPlayer} wins!`);
-                gameOver = true;
-            } else if (board.every(cell => cell !== '')) {
-                alert("It's a draw!");
-                gameOver = true;
-            } else {
-                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-            }
-        }
-
-        // Check for a winning combination
-        function checkWin(player) {
-            const winningCombinations = [
-                [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
-                [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
-                [0, 4, 8], [2, 4, 6] // diagonals
-            ];
-
-            return winningCombinations
+	
+	
+	</div>
+</body>
+	
+</html>
