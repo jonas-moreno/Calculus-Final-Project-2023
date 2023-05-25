@@ -11,12 +11,15 @@ var yCord3;
 
 var score = 0;
 
+hasWon = false;
+
 //((w - canvasSize)/ 2)
 
 var guessed = false;
 var firstPointGuessed = false;
 var secondPointGuessed = false;
 var thirdPointGuessed = false;
+var difficulty = 3;
 
 // Function setup: Executed once at the beginning
 function setup() {
@@ -25,12 +28,15 @@ function setup() {
   let int = createInput("7*cos(t)");    // Creates an input field with initial value "7*cos(t)"
   int.elt.id = "xOfT";      // Sets the ID of the input field to "xOfT"
   int.size(80);
-  createSpan("y(t) = ");     // Creates a span element with the text "y(t) ="
+  createSpan("  y(t) = ");     // Creates a span element with the text "y(t) ="
   let a = createInput("7*sin(t)");      // Creates an input field with initial value "7*sin(t)"
   a.elt.id = "yOfT";        // Sets the ID of the input field to "yOfT"
   a.size(80);
+  createSpan("  difficulty (1-3): ")
+  let diff = createInput("3");
+  diff.elt.id = "diff1";
+  diff.size(60);
   makeTwoPoints();
-  scoreDisplay = createSpan("Score: " + score );
 
 }
 
@@ -39,6 +45,7 @@ function draw() {
   background(255);          // Clears the background with white color
   noFill();                 // Disables filling shapes
   stroke(157, 161, 166);    // Sets the stroke color to a light gray
+  resetScore();
   graphAxis();              // Calls the graphAxis() function to draw the graph axes
   equation(select("#xOfT").value(), select("#yOfT").value());    // Calls the equation() function with values from the input fields to plot the curve
   if(guessed)
@@ -46,9 +53,22 @@ function draw() {
     //makeTwoPoints();
     guessed = false;
     score += 1;
-    scoreDisplay();
   }
   drawPoints();
+  if (score == difficulty) {
+    hasWon = true;
+    textSize(40); 
+    fill(0,0,255);
+    text("Congrats!",20,150);
+    text("You Win!",20,200);
+    textSize(20);
+    text("Press Control R to restart and play again",20,250);
+  }
+  try {
+    difficulty = eval(select("#diff1").value());
+  }
+  catch (e)
+  { }
 }
 
 
@@ -82,34 +102,38 @@ function equation(str1, str2) {
   translate(width / 2, height / 2);    // Translates the origin to the center of the canvas
   let w = width / xv / 2;   // Calculates the range of x values based on canvas width and xv
 
-  beginShape();             // Begins drawing the curve
-
+  beginShape();   // Begins drawing the curve
+  try {
   // Iterates through the range of x values
   for (let i = -w; i < w; i += 0.01) {
-    try {
       let x = eval(str1.replaceAll("t", i));    // Evaluates the x equation for the current value of t
       let y = eval(str2.replaceAll("t", i));    // Evaluates the y equation for the current value of t
-      curveVertex(x * xv, -y * yv);              // Adds a curve vertex to the curve shape
-      if(x == xCord1 && firstPointGuessed == false)
-      {
-        firstPointGuessed = true;
-        guessed = true;
-        
+      curveVertex(x * xv, -y * yv);             // Adds a curve vertex to the curve shape
+      
+      if ((x >= xCord1-0.1) && (x <= xCord1+0.1) && (y >= yCord1-0.1) && (y <= yCord1+0.1)) {
+        if (firstPointGuessed == false) {
+          firstPointGuessed = true;
+          evalScore();
+        }
       }
-      if(x == xCord2 && secondPointGuessed == false)
-      {
-        secondPointGuessed = true;
-        guessed = true;
+      else if ((x >= xCord2-0.1) && (x <= xCord2+0.1) && (y >= yCord2-0.1) && (y <= yCord2+0.1)) {
+        if (secondPointGuessed == false) {
+          secondPointGuessed = true;
+          evalScore();
+        }
       }
-      if(x == xCord3 && thirdPointGuessed == false)
-      {
-        thirdPointGuessed = true;
-        guessed = true;
+      else if ((x >= xCord3-0.1) && (x <= xCord3+0.1) && (y >= yCord3-0.1) && (y <= yCord3+0.1)) {
+        if (thirdPointGuessed == false) {
+          thirdPointGuessed = true;
+          evalScore();
+        }
       }
-    } 
-    catch (e) {
-      return;   // Stops plotting the curve if there is an error in evaluating the equations
+      else {
+        evalScore();
+      }
     }
+  }
+  catch (e) {
   }
 
   endShape();   // Ends drawing the curve
@@ -117,20 +141,22 @@ function equation(str1, str2) {
 }
 
 function makeTwoPoints() {
+  var maxVal = 18;
 
   // Generate random coordinates for the first point
-   xCord1 = Math.floor(Math.random() * 21)*Math.pow(-1, Math.floor(Math.random() * 2));
- yCord1 = Math.floor(Math.random() * 21)* Math.pow(-1,Math.floor(Math.random() * 2));
+  xCord1 = Math.floor(Math.random() * maxVal) * Math.pow(-1,Math.floor(Math.random() * 2));
+  yCord1 = Math.floor(Math.random() * maxVal) * Math.pow(-1,Math.floor(Math.random() * 2));
 
   // Generate random coordinates for the second point
-  xCord2 = Math.floor(Math.random() * 21) * Math.pow(-1,Math.floor(Math.random() * 2));
-  yCord2 = Math.floor(Math.random() * 21) * Math.pow(-1,Math.floor(Math.random() * 2));
+  xCord2 = Math.floor(Math.random() * maxVal) * Math.pow(-1,Math.floor(Math.random() * 2));
+  yCord2 = Math.floor(Math.random() * maxVal) * Math.pow(-1,Math.floor(Math.random() * 2));
 
-  xCord3 = Math.floor(Math.random() * 21) * Math.pow(-1,Math.floor(Math.random() * 2));
-  yCord3 = Math.floor(Math.random() * 21) * Math.pow(-1,Math.floor(Math.random() * 2));
+  xCord3 = Math.floor(Math.random() * maxVal) * Math.pow(-1,Math.floor(Math.random() * 2));
+  yCord3 = Math.floor(Math.random() * maxVal) * Math.pow(-1,Math.floor(Math.random() * 2));
 
   // Display the coordinates of the points
-  pointsSpan = createSpan("Points are (" + xCord1 + ", " + yCord1 + ") and (" + xCord2 + ", " + yCord2 + ") and (" + xCord3 + "," + yCord3 + ")");
+  pointsSpan = createSpan("<p>  Points are (" + xCord1 + ", " + yCord1 + ") and (" + xCord2 + ", " + yCord2 + ") and (" + xCord3 + "," + yCord3 + ")</p>");
+  //pointsSpan.position(300,1685);
 
 }
 
@@ -144,17 +170,24 @@ function drawPoints()
   noFill();
 }
 
-function scoreDisplay() {
-    scoreDisplay = createSpan("Score: " + score );
+
+function resetScore() {
+  var firstPointGuessed = false;
+  var secondPointGuessed = false;
+  var thirdPointGuessed = false;
+  evalScore();
 }
 
-/*function checkGoesThroughPoints(str1, str2)
-{
-  try {
-    //if(eval(str1.replaceAll("t", i)))
+function evalScore() {
+  var cScore = 0;
+  if (firstPointGuessed == true) {
+    cScore+=1;
   }
-  catch (e) {
-    return;
+  if (secondPointGuessed == true) {
+    cScore+=1;
   }
-  
-}*/
+  if (thirdPointGuessed == true) {
+    cScore+=1;
+  }
+  score = cScore;
+}
