@@ -1,0 +1,16 @@
+#canvas {
+  position: relative;
+  top: auto;
+  bottom: auto;
+  margin-left: auto;
+  border: 1px solid #000;
+}
+body {
+  height: 100vh; /* set the height of the body to the full viewport height */
+  display: inline-block; /* use flexbox layout */
+  justify-content: center; /* center the canvas element horizontally */
+  align-items: center; /* center the canvas element vertically */
+}
+canvas {
+  border: 1px solid black;
+}
